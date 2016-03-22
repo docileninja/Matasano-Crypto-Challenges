@@ -28,8 +28,16 @@ letter_frequencies = {
 	' ': .001
 }
 
+def fixed_xor(b1, b2):
+	return bytes(c1 ^ c2 for c1, c2 in zip(b1, b2))
+
 def single_xor(s, k):
 	return bytes(c ^ k for c in s)
+
+from itertools import cycle
+def repeating_xor(s, k):
+	return fixed_xor(s, cycle(k))
+
 
 from math import log
 def rate_string(s):
@@ -38,3 +46,23 @@ def rate_string(s):
 		char = chr(c).lower()
 		prob += log(letter_frequencies.get(char, .0000001))
 	return prob
+
+def hamming_distance(b1, b2):
+	def num_one_bits(n):
+		if n == 0:
+			return 0
+		else:
+			return 1 + num_one_bits(n & (n - 1))
+		
+	return sum(num_one_bits(c1 ^ c2) for c1, c2 in zip(b1, b2))
+
+def chunks(l, n):
+    return [l[i:i+n] for i in range(0, len(l), n)]
+
+def recover_single_key(ciphertext):
+	possible_decryptions = []
+	for i in range(256):
+		possible_decryption = single_xor(ciphertext, i)
+		possible_decryptions.append((i, possible_decryption))
+	ranked_decryptions = sorted(possible_decryptions, key=lambda tp: -rate_string(tp[1]))
+	return ranked_decryptions[0][0]

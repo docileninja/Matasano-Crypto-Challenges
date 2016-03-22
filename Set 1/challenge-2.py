@@ -1,6 +1,9 @@
+#! /usr/bin/python
+# Challenge 2 - Fixed XOR
+
 import binascii
 
-def xor_fixed(b1, b2):
+def fixed_xor(b1, b2):
 	return bytes(c1 ^ c2 for c1, c2 in zip(b1, b2))
 
 hex_string_one = '1c0111001f010100061a024b53535009181c'
