@@ -40,11 +40,17 @@ def repeating_xor(s, k):
 
 
 from math import log
+import string
 def rate_string(s):
 	prob = 0
 	for c in s:
-		char = chr(c).lower()
-		prob += log(letter_frequencies.get(char, .0000001))
+		c = chr(c).lower()
+		if c in letter_frequencies:
+			prob += log(letter_frequencies[c])
+		elif c in string.printable:
+			prob += log(.01)
+		else:
+			prob += log(.0000001)
 	return prob
 
 def hamming_distance(b1, b2):
